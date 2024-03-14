@@ -1,29 +1,39 @@
 from PyQt5.QtCore import *
 #Подключение виджетов приложения,надписи,вертикальной линии,окна,кнопки
 from PyQt5.QtWidgets import QApplication,QLabel,QVBoxLayout,QWidget,QPushButton
+import instr
+from secondwindow import *
 #Создание приложения
+current = 0
 app = QApplication([])
 #Создание окна
-window = QWidget()
-#Создание кнопки с надписью
-button = QPushButton('Кнопка с секретом')
-#Показ окна(По умолчанию окна скрыты)
-window.show()
-#Создание надписи с текстом
-label = QLabel('Ты просто чудо')
-label2 = QLabel('Ты просто чудо')
-#Создание вертикальной линии
-vlayout = QVBoxLayout()
-#Добавление к ней виджета и положения относительно неё
-vlayout.addWidget(label,0,alignment=Qt.AlignLeft)
-vlayout.addWidget(label2,0,alignment=Qt.AlignLeft)
-vlayout.addWidget(button,0,alignment=Qt.AlignHCenter)
-#Добавление линии в окно
-window.setLayout(vlayout)
-#Функция для показа надписи
-def show_label():
-    label.show()
-#Обработка функции по нажатию на кнопку
-button.clicked.connect(show_label)
+class MainWindow(QWidget):
+    def __init__(self) -> None:
+        super().__init__()
+        self.appear()
+        self.initUi()
+        self.connects()
+        self.show()
+    def appear(self):
+        self.setWindowTitle(instr.txt_title)
+        self.resize(800,600)
+    def initUi(self):
+        self.label = QLabel(instr.txt_hello)
+        self.label2 = QLabel(instr.txt_instruction)
+        self.button = QPushButton(instr.txt_next)
+        #Создание вертикальной линии
+        self.vlayout = QVBoxLayout()
+        #Добавление к ней виджета и положения относительно неё
+        self.vlayout.addWidget(self.label,0,alignment=Qt.AlignLeft)
+        self.vlayout.addWidget(self.label2,0,alignment=Qt.AlignLeft)
+        self.vlayout.addWidget(self.button,0,alignment=Qt.AlignHCenter)
+        self.setLayout(self.vlayout)
+    def connects(self):
+        self.button.clicked.connect(self.changewindow)
+    def changewindow(self):
+        self.hide()
+        self.sw = SecondWindow()
+        
+window = MainWindow()
 #Не закрывать приложение пока не нажата кнопка выйти
 app.exec_()
